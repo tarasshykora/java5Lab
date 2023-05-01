@@ -1,25 +1,34 @@
 import java.util.HashSet;
-import java.util.Scanner;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Shuttle {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Shuttles: ");
-        String input = scanner.nextLine();
 
-        HashSet<String> missionSet = new HashSet<>();
-        Pattern pattern = Pattern.compile("/shuttle/missions/([a-zA-Z0-9-]+)_\\d+");
-        Matcher matcher = pattern.matcher(input);
+    public static final Pattern SHUTTLE_MISSIONS_PATTERN = Pattern.compile("/shuttle/missions/([a-zA-Z0-9-]+)_\\d+");
 
-        while (matcher.find()) {
-            String missionName = matcher.group(1);
-            missionSet.add(missionName);
+
+    public Set<String> findUniqueMissionsNumber(String text) {
+        Set<String> uniqueMissions = new HashSet<>();
+        Matcher m = SHUTTLE_MISSIONS_PATTERN.matcher(text);
+
+        while (m.find()) {
+            uniqueMissions.add(m.group(1));
         }
 
-        System.out.println("Unique missions: " + missionSet);
-
-        scanner.close();
+        return uniqueMissions;
     }
+
+    public static void main(String[] args) {
+        Shuttle shuttleMissionFinder = new Shuttle();
+        System.out.println(shuttleMissionFinder.findUniqueMissionsNumber("""
+        /shuttle/missions/app2_2
+        /shuttle/missions/app2_2
+        /shuttle/missions/app2_2
+        /shuttle/missions/ap2_2
+    """
+    ));
+
+        }
 }
